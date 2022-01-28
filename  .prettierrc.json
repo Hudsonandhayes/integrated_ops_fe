@@ -1,0 +1,55 @@
+{
+	"printWidth": 120,
+	"tabWidth": 4,
+	"useTabs": true,
+	"htmlWhitespaceSensitivity":"ignore",
+	"overrides": [
+		{
+			"files":  ["*.vue", "*.js"],,
+			"options": {
+				"arrowParens": "always",
+				"endOfLine": "crlf",
+				"singleQuote": true,
+				"trailingComma": "all",
+				"printWidth": 120,
+				"htmlWhitespaceSensitivity":"ignore"
+			}
+		},
+		{
+			"files": "*.html",
+			"options": {}
+		},
+		{
+			"files": "*.vue",
+			"options": {
+				"printWidth": 120
+			}
+		},
+		{
+			"files": "*.css",
+			"options": {
+				"singleQuote": true,
+				"trailingComma": "all"
+			}
+		},
+		{
+			"files": "*.scss",
+			"options": {
+				"singleQuote": true,
+				"trailingComma": "all"
+			}
+		},
+		{
+			"files": "*.json",
+			"options": {}
+		},
+		{
+			"files": "*.php",
+			"options": {
+				"braceStyle": "1tbs",
+				"singleQuote": false,
+				"trailingCommaPHP": "php7.2"
+			}
+		}
+	]
+}

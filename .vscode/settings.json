@@ -1,0 +1,11 @@
+{
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.rulers": [120],
+	"editor.wordWrap": "wordWrapColumn",
+	"editor.wordWrapColumn": 120,
+	"editor.formatOnPaste": false,
+	"eslint.validate": ["javascript", "javascriptreact", "vue"],
+	"eslint.workingDirectories": [{ "mode": "auto" }],
+	"prettier.printWidth": 120,
+	"prettier.htmlWhitespaceSensitivity": "ignore"
+}
