@@ -12,8 +12,14 @@
 				finish-button-text="Create survey"
 				@on-complete="submit_process_timing_survey"
 			>
-				<tab-content title="Survey Information" :before-change="validate_survey_info_tab">
-					<form data-vv-scope="create_survey_form" id="create_survey_form">
+				<tab-content
+					title="Survey Information"
+					:before-change="validate_survey_info_tab"
+				>
+					<form
+						data-vv-scope="create_survey_form"
+						id="create_survey_form"
+					>
 						<div class="vx-row mb-3">
 							<div class="vx-col w-full">
 								<small class="label">Survey Name*</small>
@@ -24,7 +30,10 @@
 									type="text"
 									v-model="survey.name"
 								/>
-								<span class="text-danger text-sm" v-show="errors.has('survey_name')">
+								<span
+									class="text-danger text-sm"
+									v-show="errors.has('survey_name')"
+								>
 									{{ errors.first("survey_name") }}
 								</span>
 							</div>
@@ -39,7 +48,10 @@
 									class="w-full"
 									v-model="survey.start_date"
 								/>
-								<span class="text-danger text-sm" v-show="errors.has('start_date')">
+								<span
+									class="text-danger text-sm"
+									v-show="errors.has('start_date')"
+								>
 									{{ errors.first("start_date") }}
 								</span>
 							</div>
@@ -52,7 +64,10 @@
 									class="w-full"
 									v-model="survey.end_date"
 								/>
-								<span class="text-danger text-sm" v-show="errors.has('end_date')">
+								<span
+									class="text-danger text-sm"
+									v-show="errors.has('end_date')"
+								>
 									{{ errors.first("end_date") }}
 								</span>
 							</div>
@@ -93,7 +108,10 @@
 					</form>
 				</tab-content>
 
-				<tab-content title="Process Info" :before-change="validate_process_select">
+				<tab-content
+					title="Process Info"
+					:before-change="validate_process_select"
+				>
 					<div class="vx-row mb-3">
 						<div class="vx-col w-1/2">
 							<small class="label">Select Processes Tree</small>
@@ -109,7 +127,10 @@
 						</div>
 					</div>
 				</tab-content>
-				<tab-content title="Participants" :before-change="create_participants" >
+				<tab-content
+					title="Participants"
+					:before-change="create_participants"
+				>
 					<div class="vx-row mb-3 flex-row items-end">
 						<div class="vx-col w-2/3">
 							<small class="label">Select Department</small>
@@ -122,7 +143,7 @@
 						<div class="vx-col w-1/3">
 							<small class="label"></small>
 							<vs-button
-								v-if="this.checked_employees.length > 0" 
+								v-if="this.checked_employees.length > 0"
 								color="rgb(62, 201, 214)"
 								type="filled"
 								class="p-3"
@@ -134,14 +155,21 @@
 					</div>
 					<div class="vx-row mb-3">
 						<div class="vx-col w-full">
-							<p class="table-header text-base font-semibold text-gray-700">
+							<p
+								class="
+									table-header
+									text-base
+									font-semibold
+									text-gray-700
+								"
+							>
 								Select Participants for the survey
 							</p>
 							<div slot="no-body" class="mt-4">
 								<vs-table
 									v-model="checked_employees"
 									max-items="20"
-									pagination	
+									pagination
 									multiple
 									stripe
 									class="table-dark-inverted"
@@ -189,12 +217,19 @@
 								<vs-table
 									stripe
 									max-items="10"
-									pagination	
+									pagination
 									class="table-dark-inverted"
 									:data="selected_participants"
 								>
 									<template slot="header">
-										<p class="table-header text-base font-semibold text-gray-700">
+										<p
+											class="
+												table-header
+												text-base
+												font-semibold
+												text-gray-700
+											"
+										>
 											List of Selected Participants
 										</p>
 									</template>
@@ -233,13 +268,21 @@
 											</vs-td>
 
 											<vs-td>
-												<vx-tooltip text="Delete" position="left">
+												<vx-tooltip
+													text="Delete"
+													position="left"
+												>
 													<vs-button
 														radius
 														color="primary"
 														type="border"
 														icon="delete"
-														@click="confirm_delete_selected_employee(tr,indextr)"
+														@click="
+															confirm_delete_selected_employee(
+																tr,
+																indextr
+															)
+														"
 													></vs-button>
 												</vx-tooltip>
 											</vs-td>
@@ -545,7 +588,7 @@ export default {
 		go_to_assessment_page(client_id, assessment_id) {
 			const c_id = parseInt(client_id, 10);
 			const a_id = parseInt(assessment_id, 10);
-			 
+
 			this.$router.push(`/pages/client/${c_id}/survey/${a_id}`);
 		},
 
@@ -553,59 +596,75 @@ export default {
 			this.$vs.loading();
 			const _that = this;
 			const exit = save_and_exit;
-			 
+
 			if (this.client_assessment_id <= 0) {
+				SurveyService.create_assessment_survey(
+					this.client_id,
+					this.survey
+				)
+					.then((response) => {
+						const output = response.data;
 
-				SurveyService.create_assessment_survey(this.client_id,this.survey).then((response) => {
+						if (output && output !== undefined) {
+							if (output.success) {
+								_that.surveys.push(output.data);
+								_that.client_assessment_id = output.data.id;
+								_that.survey_process.client_assessment_id =
+									_that.client_assessment_id;
+								_that.client_survey.name = output.data.name;
+								_that.survey_form_wizard_title =
+									"Editing Process Timing Survey : " +
+									_that.client_survey.name;
 
-					const output = response.data;
-
-					if (output && output !== undefined) {
-
-						if (output.success) {
-							_that.surveys.push(output.data);
-							_that.client_assessment_id = output.data.id;
-							_that.survey_process.client_assessment_id = _that.client_assessment_id;
-							_that.client_survey.name = output.data.name;
-							_that.survey_form_wizard_title ="Editing Process Timing Survey : " +_that.client_survey.name;
-
-							if (exit) {
-
-								_that.$vs.loading.close();
-								_that.go_to_clients_page(_that.client_id);
-
-							}else{
-								_that.get_survey_processes();
-								let old_a_id = parseInt(_that.old_assessment_id ,10);
-								let new_a_id = parseInt(_that.client_assessment_id ,10);
-								if(old_a_id === -1 && (old_a_id !== new_a_id)){
-								 
-									_that.$router.push(`/pages/client/${_that.client_id}/assessment/${new_a_id}`);
-								} 
+								if (exit) {
+									_that.$vs.loading.close();
+									_that.go_to_clients_page(_that.client_id);
+								} else {
+									_that.get_survey_processes();
+									let old_a_id = parseInt(
+										_that.old_assessment_id,
+										10
+									);
+									let new_a_id = parseInt(
+										_that.client_assessment_id,
+										10
+									);
+									if (
+										old_a_id === -1 &&
+										old_a_id !== new_a_id
+									) {
+										_that.$router.push(
+											`/pages/client/${_that.client_id}/assessment/${new_a_id}`
+										);
+									}
+								}
+							} else {
+								_that.$vs.notify({
+									title: "Create survey",
+									text: "Failed to create survey.",
+									color: "warning",
+									timing: 4000,
+								});
 							}
-						} else {
-							_that.$vs.notify({
-								title: "Create survey",
-								text: "Failed to create survey.",
-								color: "warning",
-								timing: 4000,
-							});
 						}
-					}
-					_that.$vs.loading.close();
-				})
-				.catch((err) => {
-					_that.$vs.loading.close();
-					_that.$vs.notify({
-						title: "Create survey",
-						text: "Failed to create survey.",
-						color: "warning",
-						timing: 4000,
+						_that.$vs.loading.close();
+					})
+					.catch((err) => {
+						_that.$vs.loading.close();
+						_that.$vs.notify({
+							title: "Create survey",
+							text: "Failed to create survey.",
+							color: "warning",
+							timing: 4000,
+						});
 					});
-				});
 			} else {
 				this.get_survey_processes();
-				SurveyService.update_assessment(this.client_assessment_id,this.survey).then((response) => {
+				SurveyService.update_assessment(
+					this.client_assessment_id,
+					this.survey
+				)
+					.then((response) => {
 						const output = response.data;
 
 						if (output && output !== undefined) {
@@ -712,8 +771,7 @@ export default {
 				type: "confirm",
 				color: "danger",
 				title: `Confirm Resource Delete`,
-				text:
-					"Please confirm that you wish to delete the Resource? Any previous data stored for the Resource may also get deleted.",
+				text: "Please confirm that you wish to delete the Resource? Any previous data stored for the Resource may also get deleted.",
 				accept: this.delete_selected_employee,
 			});
 		},
@@ -721,41 +779,50 @@ export default {
 			if (this.sel_resource.assessment_employee_id > 0) {
 				this.$vs.loading();
 				const _that = this;
-				SurveyService.delete_assessment_employee(this.sel_resource.assessment_employee_id).then((response) => {
-					const output = response.data;
+				SurveyService.delete_assessment_employee(
+					this.sel_resource.assessment_employee_id
+				)
+					.then((response) => {
+						const output = response.data;
 
-					if (output && output !== undefined) {
-						if (output.success) {
-							let participant = _that.selected_participants[_that.sel_resource_idx];
-							_that.selected_participants.splice(_that.sel_resource_idx,1);
-							_that.participants.push(participant);
-							_that.$vs.notify({
-								title: "Delete successful",
-								text: "Resource has been removed!",
-								color: "success",
-								time: 3000,
-								position: "top-right",
-							});
-						} else {
-							_that.$vs.notify({
-								title: "Delete resource",
-								text: output.error,
-								color: "warning",
-								timing: 4000,
-							});
+						if (output && output !== undefined) {
+							if (output.success) {
+								let participant =
+									_that.selected_participants[
+										_that.sel_resource_idx
+									];
+								_that.selected_participants.splice(
+									_that.sel_resource_idx,
+									1
+								);
+								_that.participants.push(participant);
+								_that.$vs.notify({
+									title: "Delete successful",
+									text: "Resource has been removed!",
+									color: "success",
+									time: 3000,
+									position: "top-right",
+								});
+							} else {
+								_that.$vs.notify({
+									title: "Delete resource",
+									text: output.error,
+									color: "warning",
+									timing: 4000,
+								});
+							}
 						}
-					}
-					_that.$vs.loading.close();
-				})
-				.catch((err) => {
-					_that.$vs.loading.close();
-					_that.$vs.notify({
-						title: "Delete resource",
-						text: "Failed to delete resource",
-						color: "warning",
-						timing: 4000,
+						_that.$vs.loading.close();
+					})
+					.catch((err) => {
+						_that.$vs.loading.close();
+						_that.$vs.notify({
+							title: "Delete resource",
+							text: "Failed to delete resource",
+							color: "warning",
+							timing: 4000,
+						});
 					});
-				});
 			}
 		},
 		get_client_department_employees() {
@@ -828,9 +895,7 @@ export default {
 			this.filter_dept_employees();
 		},
 		add_participants() {
-		
 			if (this.checked_employees.length > 0) {
-				
 				const _that = this;
 				this.$vs.loading();
 				let selected_employees = [];
@@ -841,37 +906,40 @@ export default {
 					employee_ids: selected_employees,
 				};
 				console.log(obj);
-				SurveyService.create_assessment_employees(this.client_assessment_id,obj).then((response) => {
+				SurveyService.create_assessment_employees(
+					this.client_assessment_id,
+					obj
+				)
+					.then((response) => {
+						const output = response.data;
 
-					const output = response.data;
-
-					// console.log(output, "client processses");
-					if (output && output !== undefined) {
-						if (output.success) {
-							_that.process_assessment_emp_list(output.data);
-						} else {
-							_that.$vs.notify({
-								title: "Add participant",
-								text: "Failed to add participant",
-								color: "warning",
-								timing: 4000,
-							});
+						// console.log(output, "client processses");
+						if (output && output !== undefined) {
+							if (output.success) {
+								_that.process_assessment_emp_list(output.data);
+							} else {
+								_that.$vs.notify({
+									title: "Add participant",
+									text: "Failed to add participant",
+									color: "warning",
+									timing: 4000,
+								});
+							}
 						}
-					}
-					_that.checked_employees = [];
-					_that.$vs.loading.close();
-				})
-				.catch((err) => {
-					_that.checked_employees = [];
-					_that.$vs.loading.close();
-					_that.$vs.notify({
-						title: "Add participant",
-						text: "Failed to add participant",
-						color: "warning",
-						timing: 4000,
+						_that.checked_employees = [];
+						_that.$vs.loading.close();
+					})
+					.catch((err) => {
+						_that.checked_employees = [];
+						_that.$vs.loading.close();
+						_that.$vs.notify({
+							title: "Add participant",
+							text: "Failed to add participant",
+							color: "warning",
+							timing: 4000,
+						});
 					});
-				});
-			}else{
+			} else {
 				this.$vs.notify({
 					title: "Select participant(s)",
 					text: "Please select one or more participant for the survey",
@@ -911,8 +979,7 @@ export default {
 							if (_that.client_processes.length <= 0) {
 								_that.$vs.notify({
 									title: "Get client process.",
-									text:
-										"Please make sure you have resources, departments and processes tree are created.",
+									text: "Please make sure you have resources, departments and processes tree are created.",
 									color: "warning",
 									timing: 4000,
 								});
@@ -1277,7 +1344,7 @@ export default {
 					checked_nodes.push(node.id);
 				}
 			});
-			 
+
 			if (checked_nodes.length === 0) {
 				this.$vs.notify({
 					title: "Process not selected",
@@ -1313,9 +1380,11 @@ export default {
 		});
 	},
 	created() {
-		this.client_id = parseInt(this.$route.params.client_id,10) || -1;
-		this.client_assessment_id = parseInt(this.$route.params.survey_id,10) || -1;
-		this.old_assessment_id= parseInt(this.$route.params.survey_id,10) || -1;
+		this.client_id = parseInt(this.$route.params.client_id, 10) || -1;
+		this.client_assessment_id =
+			parseInt(this.$route.params.survey_id, 10) || -1;
+		this.old_assessment_id =
+			parseInt(this.$route.params.survey_id, 10) || -1;
 		// console.log(this.client_id, "client id");
 		this.survey.client_id = this.client_id;
 		this.survey_process.client_id = this.client_id;
