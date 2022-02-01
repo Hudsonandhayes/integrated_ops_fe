@@ -109,7 +109,5 @@ src/assets/scss/.DS_Store
 
 .env.local 
 *.sql
-package-lock.json
-package-lock.json
-package.json
+
 yarn.lock
